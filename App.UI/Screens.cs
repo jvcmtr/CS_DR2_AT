@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App
+namespace App.UI
 {
-    enum Screens
+    public enum Screens
     {
         main,
         exit,
