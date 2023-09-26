@@ -1,7 +1,9 @@
 ﻿using AlunosLib;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,28 +15,35 @@ namespace App.UI
         {
         }
 
-        public override BaseScreen Display()
+        public override Screens Display()
         {
             Aluno encontrado = null;
-            ScreenHelper.helperText($"digite {returnCommand} para voltar");
 
-            while (encontrado == null)
-            {
-                Console.Write("Digite o nome do aluno : ");
-                string UserSearch = Console.ReadLine();
-                encontrado = alunos.Find((Aluno p) => p.nome == UserSearch);
+            string search = AnsiConsole.Prompt(new TextPrompt<string>("[dim] Digite o nome do aluno [/])"));
 
-                ScreenHelper.PrintError("aluno não encontrado");
-
-                if (UserSearch == "ESC")
+            data.Sort((a1, a2) => {
+                int s1 = 0;
+                int s2 = 0;
+                for (int i = 1; i <= search.Length; i++)
                 {
-                    currentScreen = lastScreen;
-                    return;
-                }
-            }
+                    string s = search.Substring(0, i);
+                    bool b1 = (a1.Nome.Contains(s));
+                    bool b2 = (a2.Nome.Contains(s));
 
-            alunoEmFoco = encontrado;
-            currentScreen = Screens.details;
+                    if (b1) s1++;
+                    if (b2) s2++;
+                }
+                int r = s2 - s1;
+                return r;
+            });
+
+
+            foco = data[0];
+            if (foco.Nome == search)
+            {
+                return Screens.details;
+            }
+            return Screens.list;
         }
     }
 }

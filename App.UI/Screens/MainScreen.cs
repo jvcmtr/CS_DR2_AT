@@ -1,4 +1,5 @@
 ﻿using AlunosLib;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,38 +14,29 @@ namespace App.UI
         {
         }
 
-        public override BaseScreen Display()
+        public override Screens Display()
         {
-            Console.Clear();
-            ScreenHelper.PrintHeader("Cadastro de Alunos");
-            Console.WriteLine(" Digite a opção que deseja");
+            AnsiConsole.Clear();
+            var header = ScreenHelper.InitHeader("Cadastro de Alunos");
+            AnsiConsole.Write(header);
 
-            string[] options = new string[]{
-        "adicionar",
-        "Pesquisar",
-        "lista de alunos",
-        "sair"
-    };
-            string chosen = ScreenHelper.GetOption(options);
-
-
-            lastScreen = Screens.main;
-            if (chosen == options[0])
-            {
-                currentScreen = Screens.create;
-            }
-            else if (chosen == options[1])
-            {
-                currentScreen = Screens.search;
-            }
-            else if (chosen == options[2])
-            {
-                currentScreen = Screens.list;
-            }
-            else if (chosen == options[3])
-            {
-                currentScreen = Screens.exit;
-            }
+            return AnsiConsole.Prompt(
+                new SelectionPrompt<Screens>()
+                {
+                    Converter = value => {
+                        return (value == Screens.search) ? " Pesquisar" :
+                            (value == Screens.create) ? "Adicionar aluno" :
+                            (value == Screens.list) ? "Ver todos os alunos" :
+                            (value == Screens.exit) ? "Sair" : value.ToString();
+                    }
+                }
+                .AddChoices(new[] {
+                                Screens.create,
+                                Screens.search,
+                                Screens.list,
+                                Screens.exit
+                })
+                );
         }
     }
 }

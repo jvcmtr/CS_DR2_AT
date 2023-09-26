@@ -14,42 +14,55 @@ namespace App.UI
         {
         }
 
-        public override BaseScreen Display()
+        public override Screens Display()
         {
-            Console.Clear();
-            ScreenHelper.PrintHeader("Alunos cadastrados");
-            Console.WriteLine();
+            AnsiConsole.Clear();
+            AnsiConsole.Write(ScreenHelper.InitHeader("Alunos cadastrados"));
 
-            string[] TableHeader = new string[] { "Nome", "Preço" };
-            Table list = new Table(TableHeader, tableWidth);
-            foreach (var item in alunos)
+            Markup aprov(bool aprovado) {
+                return new Markup(foco.Aprovado ?
+                    "[green invert]Aprovado[/]" : "[red invert]Reprovado[/]");
+            };
+
+            var table = new Table()
+                .Border(TableBorder.HeavyEdge)
+                .Expand()
+                .AddColumn("[bold yellow]Nome[/]")
+                .AddColumn("[bold yellow]Turma[/]")
+                .AddColumn("[bold yellow]Periodo[/]")
+                .AddColumn("[bold yellow]Aprovado[/]")
+                .AddColumn("[bold yellow]Matricula[/]");
+
+            foreach (var aluno in data)
             {
-                list.addEntry($"{item.nome}|{item.nome}");
-            }
-            list.printTable();
+                table.AddRow(
+                    new Markup(aluno.Nome),
+                    new Markup(aluno.Turma.ToString()),
+                    new Markup(aluno.Periodo.ToString()),
+                    aprov(aluno.Aprovado),
+                    new Markup(aluno.GUID.ToString())
+                );
+            };
 
 
-            string[] options = new string[]{
-        "inicio",
-        "adicionar",
-        "pesquisar",
-    };
-            string chosen = ScreenHelper.GetOption(options);
+            AnsiConsole.Write(table);
 
+            return AnsiConsole.Prompt(
+                new SelectionPrompt<Screens>()
+                {
+                    Converter = value => {
+                        return (value == Screens.search) ? " Pesquisar" :
+                            (value == Screens.create) ? "Adicionar aluno" :
+                            (value == Screens.main) ? "Voltar ao inicio" : value.ToString();
+                    }
+                }
+                .AddChoices(new[] {
+                    Screens.main,
+                    Screens.create,
+                    Screens.search
+                })
+                );
 
-            lastScreen = Screens.list;
-            if (chosen == options[0])
-            {
-                currentScreen = Screens.main;
-            }
-            else if (chosen == options[1])
-            {
-                currentScreen = Screens.create;
-            }
-            else if (chosen == options[2])
-            {
-                currentScreen = Screens.search;
-            }
         }
     }
 }

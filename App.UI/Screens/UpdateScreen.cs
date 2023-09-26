@@ -1,7 +1,9 @@
 ﻿using AlunosLib;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,50 +15,64 @@ namespace App.UI
         {
         }
 
-        public override BaseScreen Display()
+        public override Screens Display()
         {
-            Console.Clear();
+            Aluno Editado = foco;
+            string[] options = new string[]{
+                "Nome",
+                "Turma",
+                "Periodo",
+                "Aprovado",
+                "salvar alterações",
+                "cancelar"
+            };
+            string option = "";
 
-            ScreenHelper.PrintHeader("Adicionar aluno");
-            ScreenHelper.helperText($"digite {returnCommand} para voltar");
-            ScreenHelper.helperText($"deixe em branco para manter o mesmo valor");
-
-            Console.Write(" Nome :\t");
-            string nome = ScreenHelper.getInputWithDefault(alunoEmFoco.nome);
-
-            if (nome == returnCommand)
+            while (option != options[4] && option != options[5])
             {
-                currentScreen = lastScreen;
-                return;
+                option = AnsiConsole.Prompt(
+                  new SelectionPrompt<string>()
+                      .Title(" Editar ")
+                      .AddChoices(options)
+                  );
+
+                if (option == options[0])
+                    Editado.Nome = AnsiConsole.Prompt<string>( new TextPrompt<string>(" Nome : "));
+
+                if (option == options[1])
+                    Editado.Turma = AnsiConsole.Prompt(
+                        new SelectionPrompt<Turmas>()
+                            .Title(" Turma : ")
+                            .PageSize(3)
+                            .AddChoices(new[]
+                            {
+                                Turmas.EAD,
+                                Turmas.manha_1,
+                                Turmas.manha_2,
+                                Turmas.tarde,
+                                Turmas.noite_1,
+                                Turmas.noite_2
+                            })
+                        );
+
+                if (option == options[2]) 
+                    Editado.Periodo = AnsiConsole.Prompt<int>(
+                        new TextPrompt<int>(" Periodo : ")
+                        );
+
+                if (option == options[3])
+                    Editado.Aprovado = AnsiConsole.Confirm(" Aprovado ");
+                
             }
 
-            while (true)
+            if (option == options[4])
             {
-                Console.Write("Preço :\t");
-                string preco = ScreenHelper.getInputWithDefault(alunoEmFoco.nome);
-                preco = preco.Replace(".", ",");
-
-                if (preco == returnCommand)
-                {
-                    currentScreen = lastScreen;
-                    return;
-                }
-
-                lastScreen = Screens.create;
-                if (Decimal.TryParse(preco, out decimal d))
-                {
-                    Aluno p = new Aluno(nome, d);
-                    alunos.Remove(alunoEmFoco);
-                    alunos.Add(p);
-                    alunoEmFoco = p;
-                    currentScreen = Screens.details;
-                    return;
-                }
-                else
-                {
-                    ScreenHelper.PrintError("Este não é um preço válido");
-                }
+                foco = Editado;
+                var r = data.Find(a1 => a1.GUID == foco.GUID);
+                r = foco;
             }
+
+            return Screens.details;
         }
     }
 }

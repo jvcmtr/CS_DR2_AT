@@ -12,12 +12,14 @@ namespace App.UI
     {
         protected BaseScreen previous;
         protected List<Aluno> data;
+        protected Aluno foco;
         protected BaseScreen next;
 
         public BaseScreen(BaseScreen previous, List<Aluno> data)
         {
             this.previous = previous;
             this.data = data;
+            foco = previous.foco;
         }
 
         public List<Aluno> getData()

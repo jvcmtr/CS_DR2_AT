@@ -8,10 +8,11 @@ namespace AlunosLib
 {
     public enum Turmas
     {
-        manha1,
-        manha2,
+        manha_1,
+        manha_2,
         tarde,
-        noite,
+        noite_1,
+        noite_2,
         EAD,
         ERRO
     }

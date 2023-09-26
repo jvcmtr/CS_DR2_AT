@@ -1,4 +1,5 @@
 ﻿using AlunosLib;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,49 +14,41 @@ namespace App.UI
         {
         }
 
-        public override BaseScreen Display()
+        public override Screens Display()
         {
+            AnsiConsole.Clear();
 
-            Console.Clear();
+            var header = ScreenHelper.InitHeader("Adicionar aluno");
+            AnsiConsole.Write(header);
+            //ScreenHelper.helperText($"digite {returnCommand} para voltar");
 
-            ScreenHelper.PrintHeader("Adicionar aluno");
-            ScreenHelper.helperText($"digite {returnCommand} para voltar");
+            string nome = AnsiConsole.Prompt<string>(
+                new TextPrompt<string>(" Nome : ")
+                );
+            Turmas turma = AnsiConsole.Prompt(
+                new SelectionPrompt<Turmas>()
+                    .Title(" Turma : ")
+                    .PageSize(3)
+                    .AddChoices(new[]
+                    {
+                        Turmas.EAD,
+                        Turmas.manha_1,
+                        Turmas.manha_2,
+                        Turmas.tarde,
+                        Turmas.noite_1,
+                        Turmas.noite_2
+                    })
+                ) ;
+            int periodo = AnsiConsole.Prompt<int>(
+                new TextPrompt<int>(" Periodo : ")
+                );
+            bool aprovado = AnsiConsole.Confirm(" Aprovado ");
 
-            Console.Write(" Nome :\t");
-            string nome = Console.ReadLine();
+            var foco = new Aluno(nome, periodo, turma, aprovado);
+            data.Add(foco);
 
-            if (nome == returnCommand)
-            {
-                currentScreen = lastScreen;
-                return;
-            }
-
-            while (true)
-            {
-                Console.Write("Preço :\t");
-                string preco = Console.ReadLine();
-                preco = preco.Replace(".", ",");
-
-                if (preco == returnCommand)
-                {
-                    currentScreen = lastScreen;
-                    return;
-                }
-
-                lastScreen = Screens.create;
-                if (Decimal.TryParse(preco, out decimal d))
-                {
-                    Aluno p = new Aluno(nome, d);
-                    alunos.Add(p);
-                    alunoEmFoco = p;
-                    currentScreen = Screens.details;
-                    return;
-                }
-                else
-                {
-                    ScreenHelper.PrintError("Este não é um preço válido");
-                }
-            }
+            return Screens.details;
+            
         }
     }
 }
