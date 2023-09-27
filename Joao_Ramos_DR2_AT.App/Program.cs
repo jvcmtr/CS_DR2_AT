@@ -10,11 +10,8 @@ namespace Joao_Ramos_DR2_AT.App
         {
            Console.BackgroundColor = ConsoleColor.Black;
             
-            //IRepository? repos = (args.Length != 0)? ReposInitializer.getRepoFromArgs(args) : ReposInitializer.getRepos();
+            IRepository? repos = (args.Length != 0)? ReposInitializer.getRepoFromArgs(args) : ReposInitializer.getRepos();
 
-            IRepository repos = new ListRepos();
-            Console.WriteLine("repos : ");
-            Console.WriteLine(repos);
 
             if (repos is not null)
             {

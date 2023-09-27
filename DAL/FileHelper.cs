@@ -1,4 +1,5 @@
 ﻿using AlunosLib;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,14 +16,6 @@ namespace DAL
     {
         public delegate string Serializer(ICollection<Aluno> list);
         public delegate ICollection<Aluno> Deserializer(string text);
-
-        public static string JSONSerialize(ICollection<Aluno> list) {
-            return JsonSerializer.Serialize<ICollection<Aluno>>(list);
-        }
-
-        public static ICollection<Aluno> JSONDeserialize(string text){
-            return JsonSerializer.Deserialize<List<Aluno>>(text);
-        }
 
         public static string CSVSerialize(ICollection<Aluno> list)
         {
@@ -54,6 +47,32 @@ namespace DAL
             }
             return list;
         }
+
+
+        #region JSON_SERIALIZER
+        /*
+        public static string JSONSerialize(ICollection<Aluno> list) {
+            return JsonSerializer.Serialize(list);
+        }
+
+        public static ICollection<Aluno> JSONDeserialize(string text){
+            return JsonSerializer.Deserialize<List<Aluno>>(text);
+        }
+
+
+        public static string JSONSerialize(ICollection<Aluno> list) {
+            return JsonConvert.SerializeObject(list);
+        }
+
+        public static ICollection<Aluno> JSONDeserialize(string text){
+            var list = JsonConvert.DeserializeObject<List<Aluno>>(text);
+            if(list==null) return new List<Aluno>();
+            return list;
+        }
+        */
+        #endregion
+
+
 
     }
 }

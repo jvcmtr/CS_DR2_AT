@@ -23,6 +23,9 @@ namespace App.UI
         {
             AnsiConsole.Clear();
 
+            AnsiConsole.Write(new FigletText("Bem Vindo !").LeftJustified().Color(Color.Teal) );
+            AnsiConsole.WriteLine();
+
             var list = ScreenHelper.AlunoList(data, 5);
             var p = ScreenHelper.InitPanel(list, "Cadastro de Alunos");
             AnsiConsole.Write(p);

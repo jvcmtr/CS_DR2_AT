@@ -71,8 +71,15 @@ namespace App.UI
             if (option == options[4])
             {
                 foco = Editado;
-                var r = data.Find(a1 => a1.GUID == foco.GUID);
-                r = foco;
+                var nList = new List<Aluno>();
+                foreach (var al in data)
+                {
+                    if (al.GUID != foco.GUID)
+                        nList.Add(al);
+                    else
+                        nList.Add(foco);
+                }
+                data = nList;
             }
 
             return Screens.details;

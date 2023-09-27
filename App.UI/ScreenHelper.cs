@@ -111,8 +111,9 @@ namespace App.UI
                 );
             };
 
-
-            table.AddRow("[dim] ... [/]", "[dim] ... [/]", "[dim] ... [/]", "[dim] ... [/]", "[dim] ... [/]");
+            if(size < list.Count)
+                table.AddRow("[dim] ... [/]", "[dim] ... [/]", 
+                    "[dim] ... [/]", "[dim] ... [/]", "[dim] ... [/]");
 
             return table.Collapse();
         }
@@ -144,12 +145,12 @@ namespace App.UI
             }
 
             var chart = new BreakdownChart()
-                .AddItem(Turmas.manha_1.ToString(), m1, Color.LightGoldenrod1)
-                .AddItem(Turmas.manha_2.ToString(), m2, Color.SkyBlue2)
+                .AddItem(Turmas.manha_1.ToString(), m1, Color.Yellow3)
+                .AddItem(Turmas.manha_2.ToString(), m2, Color.DarkOliveGreen1)
                 .AddItem(Turmas.tarde.ToString(), t, Color.SlateBlue1) //pink_3
-                .AddItem(Turmas.noite_1.ToString(), n1, Color.NavyBlue)
-                .AddItem(Turmas.noite_2.ToString(), n2, Color.DeepSkyBlue4_2)
-                .AddItem(Turmas.EAD.ToString(), t, Color.Yellow4_1);
+                .AddItem(Turmas.noite_1.ToString(), n1, Color.DeepSkyBlue4_2)
+                .AddItem(Turmas.noite_2.ToString(), n2, Color.NavyBlue)
+                .AddItem(Turmas.EAD.ToString(), ead, Color.Yellow4_1);
 
             return chart.Collapse();
         }

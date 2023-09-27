@@ -21,7 +21,6 @@ namespace App.UI
                 return Screens.main;
             }
 
-            Aluno encontrado = null;
             string search = AnsiConsole.Prompt(new TextPrompt<string>("[dim] Digite o nome do aluno : [/]"));
 
             data.Sort((a1, a2) => {

@@ -32,12 +32,11 @@ namespace App
             string path = Path.GetFullPath("./data");
             int i = -1;
 
-            while (i >= 0 && i <= 3)
+            while (i < 0 || i > 2)
             {
                 Console.WriteLine("\n  Qual tipo de persistencia deseja usar ?");
-                Console.WriteLine("\t[1] Arquivo JSON");
-                Console.WriteLine("\t[2] Arquivo CSV");
-                Console.WriteLine("\t[3] lista");
+                Console.WriteLine("\t[1] Arquivo CSV");
+                Console.WriteLine("\t[2] lista");
                 Console.WriteLine("\t[0] sair");
 
                 string s = Console.ReadLine();
@@ -47,23 +46,15 @@ namespace App
             switch (i)
             {
                 case 1:
-                    return getJSONRepos(path);
-                    break;
-                case 2:
                     return getCSVRepos(path);
                     break;
-                case 3:
+                case 2:
                     return new ListRepos();
                     break;
                 default:
                     return null;
                     break;
             }
-        }
-
-        private static IRepository getJSONRepos(string path)
-        {
-            return new FileRepos(path, FileHelper.JSONSerialize, FileHelper.JSONDeserialize);
         }
 
         private static IRepository getCSVRepos(string path)

@@ -18,6 +18,7 @@ namespace App.UI
         public override Screens Display()
         {
             AnsiConsole.Clear();
+            AnsiConsole.Write(new FigletText(" + + + + +").LeftJustified().Color(Color.Grey23));
             var alunoInfo = ScreenHelper.AlunoInfoTable(foco);
 
 

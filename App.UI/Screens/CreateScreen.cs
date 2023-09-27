@@ -16,7 +16,7 @@ namespace App.UI
         }
 
         public override Screens Display()
-        {
+        { 
             var t = new Table()
                 .AddColumn("Nome : ")
                 .Border(TableBorder.None);
@@ -50,6 +50,7 @@ namespace App.UI
         {
             AnsiConsole.Background = Config.background;
             AnsiConsole.Clear();
+            AnsiConsole.Write(new FigletText(" + + + + +").LeftJustified().Color(Color.Grey23));
             var header = ScreenHelper.InitPanel(t, "Adicionar aluno");
             AnsiConsole.Write(header);
         }
