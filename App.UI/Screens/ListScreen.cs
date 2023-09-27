@@ -17,43 +17,35 @@ namespace App.UI
         public override Screens Display()
         {
             AnsiConsole.Clear();
-            AnsiConsole.Write(ScreenHelper.InitHeader("Alunos cadastrados"));
 
-            Markup aprov(bool aprovado) {
-                return new Markup(foco.Aprovado ?
-                    "[green invert]Aprovado[/]" : "[red invert]Reprovado[/]");
-            };
+            var layout = new Layout("root")
+                .SplitColumns(
+                    new Layout("left"),
+                    new Layout("right")
+                    .SplitRows(
+                         new Layout("uper"),
+                         new Layout("midle"),
+                         new Layout("bottom")
+                        )
+                    );
 
-            var table = new Table()
-                .Border(TableBorder.HeavyEdge)
-                .Expand()
-                .AddColumn("[bold yellow]Nome[/]")
-                .AddColumn("[bold yellow]Turma[/]")
-                .AddColumn("[bold yellow]Periodo[/]")
-                .AddColumn("[bold yellow]Aprovado[/]")
-                .AddColumn("[bold yellow]Matricula[/]");
+            var table = ScreenHelper.AlunoList(data);
+            var p1 = ScreenHelper.InitPanel(table.Collapse(), "Relatorio de Alunos");
+            layout["left"].Update(p1);
 
-            foreach (var aluno in data)
-            {
-                table.AddRow(
-                    new Markup(aluno.Nome),
-                    new Markup(aluno.Turma.ToString()),
-                    new Markup(aluno.Periodo.ToString()),
-                    aprov(aluno.Aprovado),
-                    new Markup(aluno.GUID.ToString())
-                );
-            };
+            var p2 = ScreenHelper.InitPanel(ScreenHelper.TurmaGraph(data).Collapse(), "Alunos por turma");
+            layout["midle"].Update(p2);
 
-
-            AnsiConsole.Write(table);
+            AnsiConsole.Write(layout);
+            AnsiConsole.Console.WriteLine();
 
             return AnsiConsole.Prompt(
                 new SelectionPrompt<Screens>()
                 {
                     Converter = value => {
                         return (value == Screens.search) ? " Pesquisar" :
-                            (value == Screens.create) ? "Adicionar aluno" :
-                            (value == Screens.main) ? "Voltar ao inicio" : value.ToString();
+                            (value == Screens.create) ? " Adicionar aluno" :
+                            (value == Screens.main) ? " Voltar ao inicio" : value.ToString();
                     }
                 }
                 .AddChoices(new[] {

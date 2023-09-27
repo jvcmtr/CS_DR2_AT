@@ -18,21 +18,12 @@ namespace App.UI
         public override Screens Display()
         {
             AnsiConsole.Clear();
-            var alunoInfo = new Table()
-                .AddColumn(new TableColumn($"[bold yellow]Aluno[/]").Centered())
-                .AddColumn(new TableColumn($"[bold yellow]{foco.Nome}[/]"))
-                .Expand()
-                .Border(TableBorder.Rounded)
-                .AddRow( new Markup( "Matricula" ), new Markup( foco.GUID.ToString() ) )
-                .AddRow(new Markup("Turma"), new Markup( foco.Turma.ToString() ) )
-                .AddRow(new Markup("Periodo"), new Markup(foco.Periodo.ToString() ) )
-                .AddRow(new Markup("Aprovado"), new Markup(foco.Aprovado ? "[green invert]Aprovado[/]" : "[red invert]Reprovado[/]"));
+            var alunoInfo = ScreenHelper.AlunoInfoTable(foco);
 
-            var info = new Panel(alunoInfo)
-                .Border(BoxBorder.Rounded)
-                .Header("[bold blue] Detalhes do aluno [/]");
+
+            var p = ScreenHelper.InitPanel(alunoInfo, "Detalhes do aluno");
                 
-            AnsiConsole.Write(info);
+            AnsiConsole.Write(p);
 
             return AnsiConsole.Prompt(
                 new SelectionPrompt<Screens>(){ 

@@ -1,4 +1,5 @@
 ﻿using AlunosLib;
+using Spectre.Console;
 using Spectre.Console.Rendering;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,9 @@ namespace App.UI
         {
             this.previous = previous;
             this.data = data;
-            foco = previous.foco;
+
+            Console.WriteLine("P:" + previous);
+            if(previous != null) foco = previous.foco;
         }
 
         public List<Aluno> getData()

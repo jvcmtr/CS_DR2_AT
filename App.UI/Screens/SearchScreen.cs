@@ -17,9 +17,12 @@ namespace App.UI
 
         public override Screens Display()
         {
-            Aluno encontrado = null;
+            if(data.Count <= 0) {
+                return Screens.main;
+            }
 
-            string search = AnsiConsole.Prompt(new TextPrompt<string>("[dim] Digite o nome do aluno [/])"));
+            Aluno encontrado = null;
+            string search = AnsiConsole.Prompt(new TextPrompt<string>("[dim] Digite o nome do aluno : [/]"));
 
             data.Sort((a1, a2) => {
                 int s1 = 0;

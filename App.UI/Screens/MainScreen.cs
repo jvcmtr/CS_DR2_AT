@@ -14,20 +14,32 @@ namespace App.UI
         {
         }
 
+        public MainScreen(List<Aluno> Data) : base(null, Data)
+        {
+            foco = new Aluno("", 0, Turmas.ERRO, false);
+        }
+
         public override Screens Display()
         {
             AnsiConsole.Clear();
-            var header = ScreenHelper.InitHeader("Cadastro de Alunos");
-            AnsiConsole.Write(header);
+            var aprovados = new BreakdownChart()
+                .Compact(true)
+                .AddItem("Aprovados", data.FindAll(aluno => aluno.Aprovado).Count, Color.Green)
+                .AddItem("Reprovados", data.FindAll(aluno => !aluno.Aprovado).Count, Color.Red)
+                .Width(Config.width);
+
+
+            var p = ScreenHelper.InitPanel(aprovados, "Cadastro de Alunos");
+            AnsiConsole.Write(p);
 
             return AnsiConsole.Prompt(
                 new SelectionPrompt<Screens>()
                 {
                     Converter = value => {
                         return (value == Screens.search) ? " Pesquisar" :
-                            (value == Screens.create) ? "Adicionar aluno" :
-                            (value == Screens.list) ? "Ver todos os alunos" :
-                            (value == Screens.exit) ? "Sair" : value.ToString();
+                            (value == Screens.create) ? " Adicionar aluno" :
+                            (value == Screens.list) ? " Ver todos os alunos" :
+                            (value == Screens.exit) ? " Sair" : value.ToString();
                     }
                 }
                 .AddChoices(new[] {

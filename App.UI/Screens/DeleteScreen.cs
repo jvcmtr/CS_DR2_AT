@@ -16,7 +16,8 @@ namespace App.UI
 
         public override Screens Display()
         {
-            if (AnsiConsole.Confirm("[red bold] TEM CERTEZA QUE DESEJA DELETAR O ALUNO [/]"))
+            AnsiConsole.Foreground = Config.regular;
+            if (AnsiConsole.Confirm("[red bold] TEM CERTEZA QUE DESEJA DELETAR O ALUNO [/]", false))
             {
                 data.Remove(foco);
                 return Screens.main;
