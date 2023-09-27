@@ -1,5 +1,6 @@
 ﻿using AlunosLib;
 using Spectre.Console;
+using Spectre.Console.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,22 +18,17 @@ namespace App.UI
 
         public override Screens Display()
         {
-            Aluno Editado = foco;
+            AnsiConsole.Clear();
+            Aluno Editado = new Aluno(foco.Nome, foco.Periodo, foco.Turma, foco.Aprovado, foco.GUID.ToString());
 
-            Table editedTable = ScreenHelper.AlunoInfoTable(Editado);
-            Panel editedPanel = ScreenHelper.InitPanel(editedTable, "EDITADO");
+            Renderable editedTable = ScreenHelper.AlunoInfoTable(Editado);
+            Renderable editedPanel = ScreenHelper.InitPanel(editedTable, "EDITADO");
 
-            Table f = ScreenHelper.AlunoInfoTable(foco);
-            Panel originalPanel = ScreenHelper.InitPanel(f, "ORIGINAL");
+            Renderable f = ScreenHelper.AlunoInfoTable(foco);
+            Renderable originalPanel = ScreenHelper.InitPanel(f, "ORIGINAL");
 
-            var layout = new Layout("root")
-                .SplitColumns(
-                    new Layout("left"),
-                    new Layout("right")
-                    );
-            layout["left"].Update(editedPanel);
-            layout["right"].Update(editedPanel);
-            AnsiConsole.Write(layout);
+            var render = ScreenHelper.groupHorizontal(originalPanel, editedPanel);
+            AnsiConsole.Write(render);
 
             string[] options = new string[]{
                 "Nome",
@@ -65,10 +61,11 @@ namespace App.UI
                     Editado.Aprovado = ScreenHelper.getAprovado();
 
                 editedTable = ScreenHelper.AlunoInfoTable(Editado);
-                editedPanel = ScreenHelper.InitPanel(editedPanel, "EDITADO");
-                layout["right"].Update(editedTable);
+                editedPanel = ScreenHelper.InitPanel(editedTable, "EDITADO");
                 AnsiConsole.Clear();
-                AnsiConsole.Write(layout);
+
+                render = ScreenHelper.groupHorizontal(originalPanel, editedPanel);
+                AnsiConsole.Write(render);
             }
 
             if (option == options[4])

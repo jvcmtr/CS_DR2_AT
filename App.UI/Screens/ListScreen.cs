@@ -18,26 +18,21 @@ namespace App.UI
         {
             AnsiConsole.Clear();
 
-            var layout = new Layout("root")
-                .SplitColumns(
-                    new Layout("left"),
-                    new Layout("right")
-                    .SplitRows(
-                         new Layout("uper"),
-                         new Layout("midle"),
-                         new Layout("bottom")
-                        )
-                    );
+            var table = ScreenHelper.AlunoList(data)    ;
+            var list = ScreenHelper.InitPanel(table, "Relatorio de Alunos");
 
-            var table = ScreenHelper.AlunoList(data);
-            var p1 = ScreenHelper.InitPanel(table.Collapse(), "Relatorio de Alunos");
-            layout["left"].Update(p1);
+            var graph = ScreenHelper.TurmaGraph(data);
+            var p2 = ScreenHelper.InitPanel(graph, "Distribuicao por Turma");
 
-            var p2 = ScreenHelper.InitPanel(ScreenHelper.TurmaGraph(data).Collapse(), "Alunos por turma");
-            layout["midle"].Update(p2);
+            var graph2 = ScreenHelper.AprovadosGraph(data);
+            var p3 = ScreenHelper.InitPanel(graph2, "Distribuicao por Turma");
 
-            AnsiConsole.Write(layout);
-            AnsiConsole.Console.WriteLine();
+            var metrics = ScreenHelper.groupVertical(p2, p3);
+            var render = ScreenHelper.groupHorizontal(list, metrics);
+
+            AnsiConsole.Write(render);
+
+
 
             return AnsiConsole.Prompt(
                 new SelectionPrompt<Screens>()

@@ -22,14 +22,9 @@ namespace App.UI
         public override Screens Display()
         {
             AnsiConsole.Clear();
-            var aprovados = new BreakdownChart()
-                .Compact(true)
-                .AddItem("Aprovados", data.FindAll(aluno => aluno.Aprovado).Count, Color.Green)
-                .AddItem("Reprovados", data.FindAll(aluno => !aluno.Aprovado).Count, Color.Red)
-                .Width(Config.width);
 
-
-            var p = ScreenHelper.InitPanel(aprovados, "Cadastro de Alunos");
+            var list = ScreenHelper.AlunoList(data, 5);
+            var p = ScreenHelper.InitPanel(list, "Cadastro de Alunos");
             AnsiConsole.Write(p);
 
             return AnsiConsole.Prompt(

@@ -11,8 +11,9 @@ namespace App.UI
 {
     public static class ScreenHelper
     {
-        public static Panel InitPanel(IRenderable content, string header = "")
+        public static Renderable InitPanel(IRenderable content, string header = "")
         {
+            header = "[bold yellow] " + header + " [/]";
             var r = new Panel(content)
                 .Header(header)
                 .Collapse()
@@ -61,7 +62,7 @@ namespace App.UI
             return AnsiConsole.Confirm(" Aprovado ");
         }
 
-        public static Table AlunoInfoTable(Aluno foco)
+        public static Renderable AlunoInfoTable(Aluno foco)
         {
             return new Table()
                 .AddColumn(new TableColumn($"[bold yellow]Aluno[/]").RightAligned())
@@ -80,15 +81,8 @@ namespace App.UI
         }
 
 
-        public static Table AlunoList(List<Aluno> list, int size = -1)
+        public static Renderable AlunoList(List<Aluno> list, int size = -1)
         {
-            bool empty = false;
-
-            if(list==null || list.Count <= 0)
-                empty= true;
-            else if (size > list.Count || size == -1)
-                size = list.Count;
-
             var table = new Table()
                 .Border(TableBorder.HeavyEdge)
                 .AddColumn("[bold yellow]Nome[/]")
@@ -96,6 +90,14 @@ namespace App.UI
                 .AddColumn("[bold yellow]Periodo[/]")
                 .AddColumn("[bold yellow]Aprovado[/]")
                 .AddColumn("[bold yellow]Matricula[/]");
+            
+            bool empty = false;
+            if (list == null || list.Count <= 0)
+                empty = true;
+            else if (size > list.Count || size == -1)
+                size = list.Count;
+            if (empty)
+                return table.AddRow("  Não existem Alunos registrados ainda.");
 
             for (int i = 0; i < size; i++)
             {
@@ -109,13 +111,13 @@ namespace App.UI
                 );
             };
 
-            if (empty) 
-                table.AddRow("\t Não existem Alunos registrados ainda.");
+
+            table.AddRow("[dim] ... [/]", "[dim] ... [/]", "[dim] ... [/]", "[dim] ... [/]", "[dim] ... [/]");
 
             return table.Collapse();
         }
 
-        public static BreakdownChart TurmaGraph(List<Aluno> alunos)
+        public static Renderable TurmaGraph(List<Aluno> alunos)
         {
             int m1,m2, t, n1, n2, ead;
             m1 = m2 = t =n1 = n2 = ead = 0;
@@ -150,6 +152,38 @@ namespace App.UI
                 .AddItem(Turmas.EAD.ToString(), t, Color.Yellow4_1);
 
             return chart.Collapse();
+        }
+
+        public static Renderable AprovadosGraph(List<Aluno> alunos)
+        {
+            int nAprovados = 0;
+
+            foreach (var aluno in alunos)
+            {
+                if (aluno.Aprovado) nAprovados++;
+            }
+
+            var chart = new BarChart()
+                .AddItem(" Aprovados ", nAprovados, Color.Green3)
+                .AddItem(" Reprovados ", alunos.Count - nAprovados, Color.Red3);
+
+            return chart;
+        }
+
+        public static Renderable groupVertical(IRenderable r1, IRenderable r2)
+        {
+            return new Table()
+                .Border(TableBorder.None)
+                .AddColumns("")
+                .AddRow(r1)
+                .AddRow(r2);
+        }
+        public static Renderable groupHorizontal(IRenderable r1, IRenderable r2)
+        {
+            return new Table()
+                .Border(TableBorder.None)
+                .AddColumns("", "")
+                .AddRow(r1, r2);
         }
     }
 }
